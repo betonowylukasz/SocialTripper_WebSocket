@@ -66,4 +66,4 @@ jobs:
         with:
           app-name: 'SocialTripperSocket'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_110C685F35BA4489BCD07C18EB2FD9FC }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_AA245D066F0948C1A4E2A52DD82DAE3F }}
