@@ -40,7 +40,7 @@ async def handle_client(websocket):
                     for client in clients[trip_id]:
                         await client.send(message)
 
-                if data['type'] == 'stop_trip':
+                elif data['type'] == 'stop_trip':
                     for client in clients[trip_id]:
                         await client.send(message)
                     del clients[trip_id]
@@ -66,11 +66,6 @@ async def handle_client(websocket):
                         print(message)
                         await websocket.send(json.dumps(message))
 
-                # Obsługa innych wiadomości
-                else:
-                    response = {"type": "error", "message": "Unknown type"}
-                    await websocket.send(json.dumps(response))
-
             except json.JSONDecodeError:
                 response = {"type": "error", "message": "Invalid JSON"}
                 await websocket.send(json.dumps(response))
@@ -84,8 +79,8 @@ async def handle_client(websocket):
 
 async def websocket_server():
     """Uruchamia serwer WebSocket."""
-    print("WebSocket Server running on ws://0.0.0.0:8080")
-    async with websockets.serve(handle_client, "0.0.0.0", 8080):
+    print("WebSocket Server running on ws://0.0.0.0:50000")
+    async with websockets.serve(handle_client, "0.0.0.0", 50000):
         await asyncio.Future()  # Utrzymuje serwer w działaniu
 
 # Konfiguracja API (FastAPI)
@@ -159,8 +154,8 @@ app.mount("/static", StaticFiles(directory=UPLOAD_DIR), name="static")
 
 async def run_fastapi():
     """Uruchamia serwer FastAPI."""
-    print("File Server running on http://0.0.0.0:8000")
-    config = Config(app, host="0.0.0.0", port=8000, loop="asyncio")
+    print("File Server running on http://0.0.0.0:55000")
+    config = Config(app, host="0.0.0.0", port=55000, loop="asyncio")
     server = Server(config)
     await server.serve()
 
