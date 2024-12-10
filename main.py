@@ -147,7 +147,7 @@ app.mount("/static", StaticFiles(directory=UPLOAD_DIR), name="static")
 async def run_fastapi():
     """Uruchamia serwer FastAPI."""
     print("File Server running on http://0.0.0.0:55000")
-    config = Config(app, host="0.0.0.0", port=55000, loop="asyncio")
+    config = Config(app, host="0.0.0.0", port=80, loop="asyncio")
     server = Server(config)
     await server.serve()
 
