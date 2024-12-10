@@ -77,7 +77,7 @@ async def handle_client(websocket):
 async def websocket_server():
     """Uruchamia serwer WebSocket."""
     print("WebSocket Server running on ws://0.0.0.0:50000")
-    async with websockets.serve(handle_client, "0.0.0.0", 80):
+    async with websockets.serve(handle_client, "0.0.0.0", 8000):
         await asyncio.Future()  # Utrzymuje serwer w działaniu
 
 app = FastAPI()
@@ -147,7 +147,7 @@ app.mount("/static", StaticFiles(directory=UPLOAD_DIR), name="static")
 async def run_fastapi():
     """Uruchamia serwer FastAPI."""
     print("File Server running on http://0.0.0.0:55000")
-    config = Config(app, host="0.0.0.0", port=80, loop="asyncio")
+    config = Config(app, host="0.0.0.0", port=8000, loop="asyncio")
     server = Server(config)
     await server.serve()
 
@@ -158,4 +158,6 @@ async def main():
     )
 
 if __name__ == "__main__":
+    import multiprocessing
+    multiprocessing.freeze_support()  # Dodaj to, aby uniknąć problemów w środowisku wielowątkowym
     asyncio.run(main())
