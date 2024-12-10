@@ -9,9 +9,9 @@ import json
 import uuid
 from uvicorn import Config, Server
 
-# Konfiguracja WebSocket
-clients = {}  # {"uuid_trip1": {websocket1, websocket2}, "uuid_trip2": {...}}
-trip_media_history = {}  # {"uuid_trip1": [media1, media2], "uuid_trip2": [...]}
+
+clients = {}
+trip_media_history = {}
 
 async def handle_client(websocket):
     trip_id = None  # Przechowuje trip_id, do którego należy klient
