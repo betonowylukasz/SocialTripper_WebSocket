@@ -77,7 +77,7 @@ async def handle_client(websocket):
 async def websocket_server():
     """Uruchamia serwer WebSocket."""
     print("WebSocket Server running on ws://0.0.0.0:50000")
-    async with websockets.serve(handle_client, "0.0.0.0", 50000):
+    async with websockets.serve(handle_client, "0.0.0.0", 80):
         await asyncio.Future()  # Utrzymuje serwer w działaniu
 
 app = FastAPI()
