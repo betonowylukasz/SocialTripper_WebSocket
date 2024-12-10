@@ -14,7 +14,7 @@ clients = {}
 trip_media_history = {}
 
 async def handle_client(websocket):
-    trip_id = None  # Przechowuje trip_id, do którego należy klient
+    trip_id = None
     try:
         async for message in websocket:
             try:
@@ -22,7 +22,6 @@ async def handle_client(websocket):
                 trip_id = data.get('trip_id')
 
                 if not trip_id:
-                    # Jeśli nie podano trip_id, odrzuć klienta
                     response = {"type": "error", "message": "Missing trip_id"}
                     await websocket.send(json.dumps(response))
                     continue
@@ -35,7 +34,6 @@ async def handle_client(websocket):
                     clients[trip_id].add(websocket)
                     print(f"Klient dołączył do trip_id: {trip_id}")
 
-                # Obsługa pozycji lidera (przekazywanie do całego trip_id)
                 if data['type'] == 'leader_position':
                     for client in clients[trip_id]:
                         await client.send(message)
@@ -47,7 +45,6 @@ async def handle_client(websocket):
                     del trip_media_history[trip_id]
                     print(f"Lider zakończył trip o trip_id: {trip_id}")
 
-                # Synchronizacja mediów
                 elif data["type"] == "sync_media":
                     print(f"Otrzymano wiadomość: {message}")
                     last_id = data["last_id"]
@@ -83,11 +80,9 @@ async def websocket_server():
     async with websockets.serve(handle_client, "0.0.0.0", 50000):
         await asyncio.Future()  # Utrzymuje serwer w działaniu
 
-# Konfiguracja API (FastAPI)
 app = FastAPI()
 UPLOAD_DIR = "uploads"
 
-# Obsługa CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -96,7 +91,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Tworzenie katalogu na pliki
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 @app.post("/upload_media/")
@@ -108,7 +102,6 @@ async def upload_media(file: UploadFile, lat: str = Form(...), long: str = Form(
         with open(file_path, "wb") as f:
             f.write(await file.read())
 
-        # Powiadomienie klientów przez WebSocket
         notification = {
             "id": str(uuid.uuid4()),
             "type": "new_media",
@@ -149,7 +142,6 @@ async def get_file(filename: str):
         return FileResponse(file_path)
     return {"error": "File not found"}
 
-# Obsługa plików statycznych
 app.mount("/static", StaticFiles(directory=UPLOAD_DIR), name="static")
 
 async def run_fastapi():
@@ -159,7 +151,6 @@ async def run_fastapi():
     server = Server(config)
     await server.serve()
 
-# Uruchamianie obu serwerów jednocześnie
 async def main():
     await asyncio.gather(
         websocket_server(),
